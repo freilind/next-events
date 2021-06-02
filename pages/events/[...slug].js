@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import useSWR from 'swr';
 import { getFilteredEvents, URL } from '../../helpers/api-util';
 import EventList from '../../components/events/event-list';
@@ -26,8 +27,25 @@ const FilteredEventsPage = (props) => {
         }
     }, [data]);
 
+    let pageHeadData = (
+        <Head>
+            <title>
+                Filtered Events
+            </title>
+            <meta 
+                name='description'
+                content={`Al list of filtered events.`}
+            />
+        </Head>
+    );
+
     if(!loadedEvents) {
-        return <p className='center'>Loading...</p>
+        return (
+            <Fragment>
+                {pageHeadData}
+                <p className='center'>Loading...</p>
+            </Fragment>
+        );
     }
 
     const filteredYear = filterData[0];
@@ -36,9 +54,22 @@ const FilteredEventsPage = (props) => {
     const numYear = +filteredYear;
     const numMonth = +filteredMonth;
 
+    pageHeadData = (
+        <Head>
+            <title>
+                Filtered Events
+            </title>
+            <meta 
+                name='description'
+                content={`All events for ${numMonth}/${numYear}.`}
+            />
+        </Head>
+    );
+
     if(isNaN(numYear) || isNaN(numMonth) || numYear > 2030 || numYear < 2021 || numMonth > 12 || numMonth < 1 || error) {
         return (
             <Fragment>
+                {pageHeadData}
                 <ErrorAlert>
                     <p>Invalid filter. Please adjust your values!</p>
                 </ErrorAlert>
@@ -57,6 +88,7 @@ const FilteredEventsPage = (props) => {
     if(!filteredEvents || filteredEvents.length === 0) {
         return (
             <Fragment>
+                {pageHeadData}
                 <ErrorAlert>
                     <p>No events found for the chosen filter!</p>
                 </ErrorAlert>
@@ -71,6 +103,7 @@ const FilteredEventsPage = (props) => {
 
     return (
         <Fragment>
+            {pageHeadData}
             <ResultTitle date={date} />
             <EventList items={filteredEvents} />
         </Fragment>
