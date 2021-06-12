@@ -1,4 +1,7 @@
-export const URL = 'https://next-events-course-default-rtdb.firebaseio.com/';
+export const URL = `${process.env.firebase.protocol}${
+    process.env.firebase.project}-${
+    process.env.firebase.database}.${
+    process.env.firebase.domain}/`;
 
 export const getAllEvents = async () => {
     const response = await fetch(`${URL}events.json`);
