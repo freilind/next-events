@@ -13,8 +13,7 @@ const connectDatabase = async () => {
     return await DB_CLIENT.connect();
   } catch (error) {
       console.log(error);
-      res.status(500).json({message: 'Connecting to the database failed!'});
-      return;
+      throw error;
   }
 }
 
